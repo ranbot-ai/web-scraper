@@ -1,0 +1,10 @@
+node_modules
+build
+
+*.js
+
+# Variables
+config/env-config.json
+
+# Logs
+log/*.log
