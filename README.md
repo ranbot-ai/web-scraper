@@ -1,4 +1,4 @@
-# Web Scraper
+# Web Scraper | 2022
 
 - A Nodejs script that scrapes metadata & social links from public webpages.
 
