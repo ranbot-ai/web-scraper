@@ -1,7 +1,7 @@
 {
   "name": "web-scraper",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Nodejs script that scrapes metadata & social links from public webpages.",
   "main": "index.js",
   "scripts": {
     "start:dev": "nodemon",
@@ -13,8 +13,14 @@
     "type": "git",
     "url": "git+https://github.com/ranbot-ai/web-scraper.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "Web Scraper",
+    "Data Scraper",
+    "Social Links",
+    "Encore Shao",
+    "RanBOT"
+  ],
+  "author": "Encore Shao",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ranbot-ai/web-scraper/issues"
