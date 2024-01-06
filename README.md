@@ -1,11 +1,11 @@
-# Web Scraper | 2022
+# Web Scraper | 2024
 
 - A Nodejs script that scrapes metadata & social links from public webpages.
 
 ## Technology
 
 - Node
-  - Scraper running node version: 18.1.0
+  - Scraper running node version: (v14, v18, v20)
   - Node Version Manager [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 - [Puppeteer](https://pptr.dev/)
   - Node library which provides a high-level API to control Chrome
