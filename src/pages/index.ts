@@ -1,29 +1,32 @@
-import { IQueueItem } from '../../types';
-import { asyncForEach } from '../utils';
-import { config } from './../environment/config';
-import { SOCIAL_LINKS, SOCIAL_LINKS_TO_EXCLUDE } from './identifiers';
+import { IQueueItem } from "../../types";
+import { asyncForEach } from "../utils";
+import { config } from "./../environment/config";
+import { SOCIAL_LINKS, SOCIAL_LINKS_TO_EXCLUDE } from "./identifiers";
 
 async function extractMetadata(page: any): Promise<any> {
-  const metaData = await page.evaluate(() => {
-    const headerMeta: any = Array.from(
-      document.getElementsByTagName('meta')
-    ).map((meta: any) => meta.attributes);
+  const metaData = await page.$$eval("meta", (metas: any) =>
+    metas
+      .map((meta: any) => {
+        const key =
+          meta.name || meta.property || meta["http-equiv"] || undefined;
 
-    return headerMeta.map((a: any) => {
-      let obj: any = {};
-      let key = a.name?.nodeValue ||
-                a.property?.nodeValue ||
-                a['http-equiv']?.nodeValue ||
-                undefined
+        const value = meta.content;
+        return { [key]: value };
+      })
+      .filter((obj: any) => Object.keys(obj)[0] !== "undefined")
+  );
 
-      obj[key] = a.content?.nodeValue
-      return obj;
-    }).filter((obj: any) =>
-      Object.keys(obj)[0] !== 'undefined'
+  return metaData;
+}
+
+async function extractContactAddress(page: any): Promise<any> {
+  const address = await page.$$eval(`a[href^='mailto:']`, (elements: any[]) =>
+    elements.map((el: { getAttribute: (arg0: string) => any }) =>
+      el.getAttribute("href").replace("mailto:", "")
     )
-  });
+  );
 
-  return metaData
+  return [...new Set(address)];
 }
 
 async function extractSocialLinks(page: any): Promise<any> {
@@ -33,7 +36,7 @@ async function extractSocialLinks(page: any): Promise<any> {
       //returns array of all hrefs that fit social links
       return Array.from(
         document.querySelectorAll("a[href^='" + prefix + "']")
-      ).map((a: any) => a.getAttribute('href'));
+      ).map((a: any) => a.getAttribute("href"));
     }, prefix);
 
     links.push(linksForPrefix);
@@ -42,13 +45,18 @@ async function extractSocialLinks(page: any): Promise<any> {
   return Array.from(new Set(links.flat())).filter((link) => {
     let matched = false;
 
-    SOCIAL_LINKS_TO_EXCLUDE.forEach((regexp: any) => { if (link.match(regexp)) matched = true });
+    SOCIAL_LINKS_TO_EXCLUDE.forEach((regexp: any) => {
+      if (link.match(regexp)) matched = true;
+    });
     return !matched;
   });
 }
 
 // scrape page metadata and social links
-async function scrapePublicPage(browser: any, queue: IQueueItem[]): Promise<void>{
+async function scrapePublicPage(
+  browser: any,
+  queue: IQueueItem[]
+): Promise<void> {
   // Go through every item in the queue and open page in the browser
   while (queue.length > 0) {
     let queueItem: IQueueItem = queue.shift() as IQueueItem;
@@ -72,13 +80,16 @@ async function scrapePublicPage(browser: any, queue: IQueueItem[]): Promise<void
         let url = protocol + domain;
 
         try {
-          data['initial_url'] = url;
+          data["initialUrl"] = url;
           console.log("// Visiting: " + url);
 
-          await context.overridePermissions(url, ['geolocation', 'notifications']);
-          response = await page.goto(url, { waitUntil: 'networkidle2' });
+          await context.overridePermissions(url, [
+            "geolocation",
+            "notifications",
+          ]);
+          response = await page.goto(url, { waitUntil: "networkidle2" });
 
-          console.log("// -> Loaded");
+          console.log("// -> Page Loaded");
           success = true;
         } catch (err: any) {
           response = null;
@@ -89,16 +100,15 @@ async function scrapePublicPage(browser: any, queue: IQueueItem[]): Promise<void
     });
 
     if (success === false) {
-      if (error !== null) data['error'] = error.message;
-
-      console.log(JSON.stringify(data));
+      if (error !== null) data["error"] = error.message;
     } else {
-      if (response !== null) data['response_code'] = response.status()
+      if (response !== null) data["responseCode"] = response.status();
 
-      data['final_url'] = await page.evaluate(() => document.location.href);
-      data['title'] = await page.evaluate(() => document.title);
-      data['metadata'] = await extractMetadata(page);
-      data['social_links'] = await extractSocialLinks(page);
+      data["finalUrl"] = await page.evaluate(() => document.location.href);
+      data["title"] = await page.evaluate(() => document.title);
+      data["contactEmail"] = await extractContactAddress(page);
+      data["metadata"] = await extractMetadata(page);
+      data["socialLinks"] = await extractSocialLinks(page);
     }
 
     console.log(`// Data: ${JSON.stringify(data, null, 2)}`);
@@ -109,4 +119,4 @@ async function scrapePublicPage(browser: any, queue: IQueueItem[]): Promise<void
   await browser.close();
 }
 
-export { scrapePublicPage }
+export { scrapePublicPage };
