@@ -69,23 +69,12 @@ env TEST_IDS=lvmh.com node build/index.js
 
 ```json
 {
-  "initial_url": "https://lvmh.com",
-  "response_code": 200,
-  "final_url": "https://www.lvmh.com/",
+  "initialUrl": "https://lvmh.com",
+  "responseCode": 200,
+  "finalUrl": "https://www.lvmh.com/",
   "title": "LVMH, world leader in high-quality products",
+  "contactEmail": [],
   "metadata": [
-    {
-      "pragma": "no-cache"
-    },
-    {
-      "expires": "0"
-    },
-    {
-      "cache-control": "no-cache"
-    },
-    {
-      "X-UA-Compatible": "IE=edge,chrome=1"
-    },
     {
       "viewport": "width=device-width, initial-scale=1"
     },
@@ -97,24 +86,6 @@ env TEST_IDS=lvmh.com node build/index.js
     },
     {
       "description": "As the world leader in luxury, LVMH has been setting an example through its dynamic growth since its creation in 1987. Learn more about our prestigious Houses."
-    },
-    {
-      "og:locale": "en_US"
-    },
-    {
-      "og:type": "website"
-    },
-    {
-      "og:title": "LVMH, world leader in high-quality products"
-    },
-    {
-      "og:description": "As the world leader in luxury, LVMH has been setting an example through its dynamic growth since its creation in 1987. Learn more about our prestigious Houses."
-    },
-    {
-      "og:url": "https://www.lvmh.com/"
-    },
-    {
-      "og:site_name": "LVMH"
     },
     {
       "twitter:card": "summary"
@@ -138,11 +109,12 @@ env TEST_IDS=lvmh.com node build/index.js
       "theme-color": "#ffffff"
     }
   ],
-  "social_links": [
+  "socialLinks": [
     "https://www.instagram.com/lvmh/",
     "https://www.linkedin.com/company/lvmh",
     "https://www.facebook.com/lvmh",
     "https://twitter.com/LVMH/",
+    "https://www.tiktok.com/@lvmh",
     "https://www.pinterest.com/lvmhofficial/"
   ]
 }
