@@ -1,6 +1,6 @@
 import { IIdentifier, IQueueItem } from "../../types";
-const TEST_IDS =
-  process.env.TEST_IDS != null ? process.env.TEST_IDS.split(",") : false;
+const DOMAINS =
+  process.env.DOMAINS != null ? process.env.DOMAINS.split(",") : false;
 
 const SOCIAL_LINKS = [
   "https://instagram.com/",
@@ -43,9 +43,9 @@ async function scrapeIdentifier(): Promise<IQueueItem[]> {
   let queue: IQueueItem[] = [];
 
   // with test items...
-  if (TEST_IDS) {
-    for (let i = 0; i < TEST_IDS.length; i++) {
-      let identifier: IIdentifier = { id: i, identifier: TEST_IDS[i] };
+  if (DOMAINS) {
+    for (let i = 0; i < DOMAINS.length; i++) {
+      let identifier: IIdentifier = { id: i, identifier: DOMAINS[i] };
 
       queue.push({ tries: 0, identifier });
     }

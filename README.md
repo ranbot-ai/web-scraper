@@ -62,60 +62,137 @@ Starts the app in production by first building the project with `npm run build`,
 ## Usage Examples
 
 ```NodeJS
-env TEST_IDS=lvmh.com node build/index.js
+env DOMAINS=github.com node build/index.js
 ```
 
 ## Response
 
 ```json
-{
-  "initialUrl": "https://lvmh.com",
+(base) ➜  web-scraper git:(main) ✗ env DOMAINS=github.com node build/index.js
+>> Starting Web Scraper ......
+┌─────────┬───────┬─────────────────────────────────────┐
+│ (index) │ tries │             identifier              │
+├─────────┼───────┼─────────────────────────────────────┤
+│    0    │   0   │ { id: 0, identifier: 'github.com' } │
+└─────────┴───────┴─────────────────────────────────────┘
+>> Queue Size: 1
+{ tries: 0, identifier: { id: 0, identifier: 'github.com' } }
+// Visiting: https://github.com
+// -> Page Loaded
+// Data: {
+  "initialUrl": "https://github.com",
   "responseCode": 200,
-  "finalUrl": "https://www.lvmh.com/",
-  "title": "LVMH, world leader in high-quality products",
+  "finalUrl": "https://github.com/",
+  "title": "GitHub: Let’s build from here · GitHub",
   "contactEmail": [],
   "metadata": [
     {
-      "viewport": "width=device-width, initial-scale=1"
+      "route-pattern": "/"
     },
     {
-      "robots": "index,follow"
+      "route-controller": "dashboard"
     },
     {
-      "google-site-verification": "wnwFO2IRyFWWLgIicMipiBijTDunagD3x8wc-CWUGko"
+      "route-action": "index"
     },
     {
-      "description": "As the world leader in luxury, LVMH has been setting an example through its dynamic growth since its creation in 1987. Learn more about our prestigious Houses."
+      "current-catalog-service-hash": "40dc28bd654b20f337468a532ff456ed5863889cfbb4e982b793597321d48d3f"
     },
     {
-      "twitter:card": "summary"
+      "request-id": "F6FF:F9E9C:CF823E:DBF5D8:65D748E8"
     },
     {
-      "twitter:description": "As the world leader in luxury, LVMH has been setting an example through its dynamic growth since its creation in 1987. Learn more about our prestigious Houses."
+      "html-safe-nonce": "7d3cfe5667cc74d8bdaf57b9c395a7192a3497b853e6881af24070609ab6e35c"
     },
     {
-      "twitter:title": "LVMH, world leader in high-quality products"
+      "visitor-payload": "eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiJGNkZGOkY5RTlDOkNGODIzRTpEQkY1RDg6NjVENzQ4RTgiLCJ2aXNpdG9yX2lkIjoiMTc2ODcyODY0NzI5MTA2MjUwNCIsInJlZ2lvbl9lZGdlIjoiamFwYW5lYXN0IiwicmVnaW9uX3JlbmRlciI6ImphcGFuZWFzdCJ9"
     },
     {
-      "msapplication-TileColor": "#121426"
+      "visitor-hmac": "ff2934f005de93982002e1f3cbaf7577095d388191095165c5d69c0cbc725575"
     },
     {
-      "msapplication-TileImage": "https://r.lvmh-static.com/themes/lvmh/icons/mstile-144x144.png"
+      "page-subject": "GitHub"
     },
     {
-      "msapplication-config": "https://r.lvmh-static.com/themes/lvmh/icons/browserconfig.xml"
+      "github-keyboard-shortcuts": "dashboards,copilot"
     },
     {
-      "theme-color": "#ffffff"
+      "selected-link": ""
+    },
+    {
+      "google-site-verification": "c1kuD-K2HIVF635lypcsWPoD4kilo5-jA_wBFyT4uMY"
+    },
+    {
+      "google-site-verification": "KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU"
+    },
+    {
+      "google-site-verification": "ZzhVyEFwb7w3e0-uOTltm8Jsck2F5StVihD0exw2fsA"
+    },
+    {
+      "google-site-verification": "GXs5KoUUkNCoaAZn7wPN-t01Pywp9M3sEjnt_3_ZWPc"
+    },
+    {
+      "google-site-verification": "Apib7-x98H0j5cPqHWwSMm6dNU4GmODRoqxLiDzdx9I"
+    },
+    {
+      "octolytics-url": "https://collector.github.com/github/collect"
+    },
+    {
+      "user-login": ""
+    },
+    {
+      "viewport": "width=device-width"
+    },
+    {
+      "description": "GitHub is where over 100 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and features, power your CI/CD and DevOps workflows, and secure code before you commit it."
+    },
+    {
+      "apple-itunes-app": "app-id=1477376905, app-argument=https://github.com/"
+    },
+    {
+      "twitter:image:src": "https://github.githubassets.com/assets/campaign-social-031d6161fa10.png"
+    },
+    {
+      "twitter:site": "@github"
+    },
+    {
+      "twitter:card": "summary_large_image"
+    },
+    {
+      "twitter:title": "GitHub: Let’s build from here"
+    },
+    {
+      "twitter:description": "GitHub is where over 100 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and fea..."
+    },
+    {
+      "hostname": "github.com"
+    },
+    {
+      "expected-hostname": "github.com"
+    },
+    {
+      "turbo-cache-control": "no-preview"
+    },
+    {
+      "is_logged_out_page": "true"
+    },
+    {
+      "turbo-body-classes": "logged-out env-production page-responsive header-overlay home-campaign"
+    },
+    {
+      "browser-stats-url": "https://api.github.com/_private/browser/stats"
+    },
+    {
+      "browser-errors-url": "https://api.github.com/_private/browser/errors"
+    },
+    {
+      "theme-color": "#1e2327"
     }
   ],
   "socialLinks": [
-    "https://www.instagram.com/lvmh/",
-    "https://www.linkedin.com/company/lvmh",
-    "https://www.facebook.com/lvmh",
-    "https://twitter.com/LVMH/",
-    "https://www.tiktok.com/@lvmh",
-    "https://www.pinterest.com/lvmhofficial/"
+    "https://www.linkedin.com/company/github",
+    "https://www.facebook.com/GitHub",
+    "https://www.tiktok.com/@github"
   ]
 }
 ```
