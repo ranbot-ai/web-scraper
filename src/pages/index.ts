@@ -29,6 +29,37 @@ async function extractContactAddress(page: any): Promise<any> {
   return [...new Set(address)];
 }
 
+async function extractContactPhone(page: any): Promise<any> {
+  const phoneNumber = await page.$$eval(`a[href^='tel:']`, (elements: any[]) =>
+    elements.map((el: { getAttribute: (arg0: string) => any }) =>
+      el.getAttribute("href").replace("tel:", "")
+    )
+  );
+
+  return [...new Set(phoneNumber)];
+}
+
+async function extractYoutubeLinks(page: any): Promise<any> {
+  const youtubeLinks = await page.$$eval(`iframe`, (elements: any[]) =>
+    elements
+      .map((el: { getAttribute: (arg0: string) => any }) =>
+        el.getAttribute("src")
+      )
+      .filter((link: string) => {
+        console.log(link);
+
+        return (
+          link &&
+          link.match(
+            /\s*(https?:\/\/www.youtube.com\/(?:v|embed)\/([a-zA-Z0-9-]+).*)/
+          )
+        );
+      })
+  );
+
+  return [...new Set(youtubeLinks)];
+}
+
 async function extractSocialLinks(page: any): Promise<any> {
   let links: string[] = [];
   await asyncForEach(SOCIAL_LINKS, async (prefix: string) => {
@@ -107,7 +138,9 @@ async function scrapePublicPage(
       data["finalUrl"] = await page.evaluate(() => document.location.href);
       data["title"] = await page.evaluate(() => document.title);
       data["contactEmail"] = await extractContactAddress(page);
+      data["contactPhone"] = await extractContactPhone(page);
       data["metadata"] = await extractMetadata(page);
+      data["youtubeLinks"] = await extractYoutubeLinks(page);
       data["socialLinks"] = await extractSocialLinks(page);
     }
 

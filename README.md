@@ -67,7 +67,7 @@ env DOMAINS=github.com node build/index.js
 
 ## Response
 
-```json
+```
 (base) ➜  web-scraper git:(main) ✗ env DOMAINS=github.com node build/index.js
 >> Starting Web Scraper ......
 ┌─────────┬───────┬─────────────────────────────────────┐
