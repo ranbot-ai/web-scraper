@@ -19,6 +19,10 @@ const SOCIAL_LINKS = [
   "https://www.twitter.com",
   "http://twitter.com",
   "http://www.twitter.com",
+  "https://x.com",
+  "https://www.x.com",
+  "http://x.com",
+  "http://www.x.com",
   "https://g2.com",
   "https://trustpilot.com",
   "https://www.trustpilot.com/",
@@ -29,12 +33,14 @@ const SOCIAL_LINKS = [
 ];
 
 const SOCIAL_LINKS_TO_EXCLUDE = [
+  /https\:\/\/www\.linkedin\.com\/shareArticle/,
   /https\:\/\/(www\.)?instagram\.com\/p\//,
   /https\:\/\/(www\.)?instagram\.com\/explore\/tags/,
   /https\:\/\/twitter\.com\/share/,
-  /https\:\/\/www\.facebook\.com\/sharer\/sharer\.php/,
-  /https\:\/\/www\.linkedin\.com\/shareArticle/,
   /https\:\/\/twitter\.com\/intent\/tweet/,
+  /https\:\/\/x\.com\/share/,
+  /https\:\/\/x\.com\/intent\/tweet/,
+  /https\:\/\/www\.facebook\.com\/sharer\/sharer\.php/,
   /https\:\/\/www\.pinterest\.com\/\_\/\_\//,
 ];
 
