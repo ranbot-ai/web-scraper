@@ -46,8 +46,6 @@ async function extractYoutubeLinks(page: any): Promise<any> {
         el.getAttribute("src")
       )
       .filter((link: string) => {
-        console.log(link);
-
         return (
           link &&
           link.match(
@@ -65,9 +63,16 @@ async function extractSocialLinks(page: any): Promise<any> {
   await asyncForEach(SOCIAL_LINKS, async (prefix: string) => {
     let linksForPrefix = await page.evaluate((prefix: string) => {
       //returns array of all hrefs that fit social links
-      return Array.from(
-        document.querySelectorAll("a[href^='" + prefix + "']")
-      ).map((a: any) => a.getAttribute("href"));
+      const currentURL = document.location.href;
+
+      return Array.from(document.querySelectorAll("a[href^='" + prefix + "']"))
+        .map((a: any) => a.getAttribute("href"))
+        .filter(
+          (link) =>
+            link.match(/^https\:\/\/github\.com/) === null ||
+            (currentURL.match(/^https\:\/\/github\.com/) &&
+              link === "https://github.com/github")
+        );
     }, prefix);
 
     links.push(linksForPrefix);

@@ -47,7 +47,7 @@ import { scrapeIdentifier } from "./pages/identifiers";
   let queue: IQueueItem[] = await scrapeIdentifier();
   console.log(`>> Queue Size: ${queue.length}`);
 
-  // Start to scrape instagram identifiers queues
+  // Start to scrape websites
   if (queue.length === 0) {
     console.log(">> Scraper exiting...");
   } else {
