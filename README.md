@@ -68,7 +68,6 @@ env DOMAINS=github.com node build/index.js
 ## Response
 
 ```
-(base) ➜  web-scraper git:(main) ✗ env DOMAINS=github.com node build/index.js
 >> Starting Web Scraper ......
 ┌─────────┬───────┬─────────────────────────────────────┐
 │ (index) │ tries │             identifier              │
@@ -85,6 +84,7 @@ env DOMAINS=github.com node build/index.js
   "finalUrl": "https://github.com/",
   "title": "GitHub: Let’s build from here · GitHub",
   "contactEmail": [],
+  "contactPhone": [],
   "metadata": [
     {
       "route-pattern": "/"
@@ -99,16 +99,16 @@ env DOMAINS=github.com node build/index.js
       "current-catalog-service-hash": "40dc28bd654b20f337468a532ff456ed5863889cfbb4e982b793597321d48d3f"
     },
     {
-      "request-id": "F6FF:F9E9C:CF823E:DBF5D8:65D748E8"
+      "request-id": "B59E:172E16:AD767E:CBEE0C:6677EFC3"
     },
     {
-      "html-safe-nonce": "7d3cfe5667cc74d8bdaf57b9c395a7192a3497b853e6881af24070609ab6e35c"
+      "html-safe-nonce": "2c8c558ed1f4c54fc1ce4db4782175ccf3f61387a7532b21621d61bb1ce58af3"
     },
     {
-      "visitor-payload": "eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiJGNkZGOkY5RTlDOkNGODIzRTpEQkY1RDg6NjVENzQ4RTgiLCJ2aXNpdG9yX2lkIjoiMTc2ODcyODY0NzI5MTA2MjUwNCIsInJlZ2lvbl9lZGdlIjoiamFwYW5lYXN0IiwicmVnaW9uX3JlbmRlciI6ImphcGFuZWFzdCJ9"
+      "visitor-payload": "eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiJCNTlFOjE3MkUxNjpBRDc2N0U6Q0JFRTBDOjY2NzdFRkMzIiwidmlzaXRvcl9pZCI6IjQwNDI2MjYwMjQ3NzUwODYwMTkiLCJyZWdpb25fZWRnZSI6ImphcGFuZWFzdCIsInJlZ2lvbl9yZW5kZXIiOiJqYXBhbmVhc3QifQ=="
     },
     {
-      "visitor-hmac": "ff2934f005de93982002e1f3cbaf7577095d388191095165c5d69c0cbc725575"
+      "visitor-hmac": "5aa2752edec8a09b2fcc3e5dd0051840d0a13530769b56253192bffd8fb762ea"
     },
     {
       "page-subject": "GitHub"
@@ -118,18 +118,6 @@ env DOMAINS=github.com node build/index.js
     },
     {
       "selected-link": ""
-    },
-    {
-      "google-site-verification": "c1kuD-K2HIVF635lypcsWPoD4kilo5-jA_wBFyT4uMY"
-    },
-    {
-      "google-site-verification": "KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU"
-    },
-    {
-      "google-site-verification": "ZzhVyEFwb7w3e0-uOTltm8Jsck2F5StVihD0exw2fsA"
-    },
-    {
-      "google-site-verification": "GXs5KoUUkNCoaAZn7wPN-t01Pywp9M3sEjnt_3_ZWPc"
     },
     {
       "google-site-verification": "Apib7-x98H0j5cPqHWwSMm6dNU4GmODRoqxLiDzdx9I"
@@ -187,12 +175,18 @@ env DOMAINS=github.com node build/index.js
     },
     {
       "theme-color": "#1e2327"
+    },
+    {
+      "color-scheme": "light dark"
     }
   ],
+  "youtubeLinks": [],
   "socialLinks": [
     "https://www.linkedin.com/company/github",
     "https://www.facebook.com/GitHub",
-    "https://www.tiktok.com/@github"
+    "https://x.com/github",
+    "https://www.tiktok.com/@github",
+    "https://github.com/github"
   ]
 }
 ```
