@@ -79,107 +79,44 @@ env DOMAINS=github.com node build/index.js
 // Visiting: https://github.com
 // -> Page Loaded
 // Data: {
-  "initialUrl": "https://github.com",
+{
+  "sourceUrl": "https://github.com",
   "responseCode": 200,
   "finalUrl": "https://github.com/",
   "title": "GitHub: Let’s build from here · GitHub",
   "contactEmail": [],
   "contactPhone": [],
-  "metadata": [
-    {
-      "route-pattern": "/"
-    },
-    {
-      "route-controller": "dashboard"
-    },
-    {
-      "route-action": "index"
-    },
-    {
-      "current-catalog-service-hash": "40dc28bd654b20f337468a532ff456ed5863889cfbb4e982b793597321d48d3f"
-    },
-    {
-      "request-id": "B59E:172E16:AD767E:CBEE0C:6677EFC3"
-    },
-    {
-      "html-safe-nonce": "2c8c558ed1f4c54fc1ce4db4782175ccf3f61387a7532b21621d61bb1ce58af3"
-    },
-    {
-      "visitor-payload": "eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiJCNTlFOjE3MkUxNjpBRDc2N0U6Q0JFRTBDOjY2NzdFRkMzIiwidmlzaXRvcl9pZCI6IjQwNDI2MjYwMjQ3NzUwODYwMTkiLCJyZWdpb25fZWRnZSI6ImphcGFuZWFzdCIsInJlZ2lvbl9yZW5kZXIiOiJqYXBhbmVhc3QifQ=="
-    },
-    {
-      "visitor-hmac": "5aa2752edec8a09b2fcc3e5dd0051840d0a13530769b56253192bffd8fb762ea"
-    },
-    {
-      "page-subject": "GitHub"
-    },
-    {
-      "github-keyboard-shortcuts": "dashboards,copilot"
-    },
-    {
-      "selected-link": ""
-    },
-    {
-      "google-site-verification": "Apib7-x98H0j5cPqHWwSMm6dNU4GmODRoqxLiDzdx9I"
-    },
-    {
-      "octolytics-url": "https://collector.github.com/github/collect"
-    },
-    {
-      "user-login": ""
-    },
-    {
-      "viewport": "width=device-width"
-    },
-    {
-      "description": "GitHub is where over 100 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and features, power your CI/CD and DevOps workflows, and secure code before you commit it."
-    },
-    {
-      "apple-itunes-app": "app-id=1477376905, app-argument=https://github.com/"
-    },
-    {
-      "twitter:image:src": "https://github.githubassets.com/assets/campaign-social-031d6161fa10.png"
-    },
-    {
-      "twitter:site": "@github"
-    },
-    {
-      "twitter:card": "summary_large_image"
-    },
-    {
-      "twitter:title": "GitHub: Let’s build from here"
-    },
-    {
-      "twitter:description": "GitHub is where over 100 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and fea..."
-    },
-    {
-      "hostname": "github.com"
-    },
-    {
-      "expected-hostname": "github.com"
-    },
-    {
-      "turbo-cache-control": "no-preview"
-    },
-    {
-      "is_logged_out_page": "true"
-    },
-    {
-      "turbo-body-classes": "logged-out env-production page-responsive header-overlay home-campaign"
-    },
-    {
-      "browser-stats-url": "https://api.github.com/_private/browser/stats"
-    },
-    {
-      "browser-errors-url": "https://api.github.com/_private/browser/errors"
-    },
-    {
-      "theme-color": "#1e2327"
-    },
-    {
-      "color-scheme": "light dark"
-    }
-  ],
+  "metadata": {
+    "routePattern": "/",
+    "routeController": "dashboard",
+    "routeAction": "index",
+    "currentCatalogServiceHash": "40dc28bd654b20f337468a532ff456ed5863889cfbb4e982b793597321d48d3f",
+    "requestId": "82A0:389E53:37BF987:3EC2874:66DC3F38",
+    "htmlSafeNonce": "cf51c823dd62a6e74d014fa70066a0f9b962ee46d1eea99c74f0f7b41e21d532",
+    "visitorPayload": "eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiI4MkEwOjM4OUU1MzozN0JGOTg3OjNFQzI4NzQ6NjZEQzNGMzgiLCJ2aXNpdG9yX2lkIjoiMjU5MDk0OTc2NDc1MDkxNzQzMiIsInJlZ2lvbl9lZGdlIjoiamFwYW5lYXN0IiwicmVnaW9uX3JlbmRlciI6ImphcGFuZWFzdCJ9",
+    "visitorHmac": "b06089a4d6e23b2dfa0fba9c651e7eb6f9a468dc000033244ec33dd7f12ddc34",
+    "pageSubject": "GitHub",
+    "githubKeyboardShortcuts": "dashboards,copilot",
+    "googleSiteVerification": "Apib7-x98H0j5cPqHWwSMm6dNU4GmODRoqxLiDzdx9I",
+    "octolyticsUrl": "https://collector.github.com/github/collect",
+    "viewport": "width=device-width",
+    "description": "GitHub is where over 100 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and features, power your CI/CD and DevOps workflows, and secure code before you commit it.",
+    "appleItunesApp": "app-id=1477376905, app-argument=https://github.com/",
+    "twitterImageSrc": "https://github.githubassets.com/assets/campaign-social-031d6161fa10.png",
+    "twitterSite": "@github",
+    "twitterCard": "summary_large_image",
+    "twitterTitle": "GitHub: Let’s build from here",
+    "twitterDescription": "GitHub is where over 100 million developers shape the future of software, together. Contribute to the open source community, manage your Git repositories, review code like a pro, track bugs and fea...",
+    "hostname": "github.com",
+    "expectedHostname": "github.com",
+    "turboCacheControl": "no-preview",
+    "isLoggedOutPage": "true",
+    "turboBodyClasses": "logged-out env-production page-responsive header-overlay home-campaign",
+    "browserStatsUrl": "https://api.github.com/_private/browser/stats",
+    "browserErrorsUrl": "https://api.github.com/_private/browser/errors",
+    "themeColor": "#1e2327",
+    "colorScheme": "light dark"
+  },
   "youtubeLinks": [],
   "socialLinks": [
     "https://www.linkedin.com/company/github",

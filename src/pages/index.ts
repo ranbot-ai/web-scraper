@@ -4,19 +4,29 @@ import { config } from "./../environment/config";
 import { SOCIAL_LINKS, SOCIAL_LINKS_TO_EXCLUDE } from "./identifiers";
 
 async function extractMetadata(page: any): Promise<any> {
-  const metaData = await page.$$eval("meta", (metas: any) =>
-    metas
-      .map((meta: any) => {
-        const key =
-          meta.name || meta.property || meta["http-equiv"] || undefined;
+  const metaData = await page.$$eval("meta", (metas: any) => {
+    return metas.reduce((acc: any, meta: any) => {
+      let key = meta.name || meta.property || meta["http-equiv"] || undefined;
+      const value = meta.content;
 
-        const value = meta.content;
-        return { [key]: value };
-      })
-      .filter((obj: any) => Object.keys(obj)[0] !== "undefined")
-  );
+      // Utility function to convert kebab-case to camelCase
+      if (key)
+        key = key
+          .replace(/-([a-z])|_([a-z])|:([a-z])/g, (char: string) =>
+            char.toUpperCase()
+          )
+          .replace(/\-|\_|\:/g, "");
 
-  return metaData;
+      if (key && value) {
+        // Automatically convert kebab-case keys to camelCase
+        acc[key] = value; // Aggregate key-value pairs into a single object
+      }
+
+      return acc;
+    }, {}); // Initialize as an empty object for aggregation
+  });
+
+  return metaData; // Return metadata in the desired format
 }
 
 async function extractContactAddress(page: any): Promise<any> {
@@ -88,6 +98,58 @@ async function extractSocialLinks(page: any): Promise<any> {
   });
 }
 
+export async function findLinksToVisit(page: any) {
+  const rawLinks = await page.evaluate(() => {
+    const anchorTags = document.querySelectorAll("a");
+
+    let linkData = Array.from(anchorTags)
+      .filter((anchor) => {
+        let cleanedText = anchor.textContent?.trim();
+        return (
+          cleanedText &&
+          /\S/.test(cleanedText) &&
+          !/^(mailto|javascript|#|tel|fax|sms):/.test(anchor.href)
+        );
+      })
+      .map((anchor) => {
+        let cleanedText = anchor.textContent?.trim();
+        const imgTags = anchor.querySelectorAll("img");
+
+        // Replace <img> tags with their alt text
+        if (imgTags.length > 0) {
+          imgTags.forEach((img) => {
+            const altText = img.alt.trim();
+            // Replace the <img> tag in the anchor's innerHTML with the alt text
+            if (altText) {
+              cleanedText = cleanedText?.replace(img.outerHTML, altText);
+            }
+          });
+        }
+
+        // Further clean the text by removing any residual HTML tags
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = cleanedText as string;
+        cleanedText = tempDiv.textContent || tempDiv.innerText || "";
+
+        // Remove \n characters and duplicate spaces
+        cleanedText = cleanedText.replace(/\s+/g, " ").trim();
+
+        return {
+          href: anchor.href,
+          text: cleanedText,
+        };
+      });
+
+    // Filter out duplicates based on href only
+    const uniqueLinkData = Array.from(
+      new Set(linkData.map((link) => link.href))
+    ).map((href) => linkData.find((link) => link.href === href));
+    return uniqueLinkData;
+  });
+
+  return rawLinks;
+}
+
 // scrape page metadata and social links
 async function scrapePublicPage(
   browser: any,
@@ -116,7 +178,7 @@ async function scrapePublicPage(
         let url = protocol + domain;
 
         try {
-          data["initialUrl"] = url;
+          data["sourceUrl"] = url;
           console.log("// Visiting: " + url);
 
           await context.overridePermissions(url, [
@@ -140,6 +202,8 @@ async function scrapePublicPage(
     } else {
       if (response !== null) data["responseCode"] = response.status();
 
+      await page.bringToFront();
+
       data["finalUrl"] = await page.evaluate(() => document.location.href);
       data["title"] = await page.evaluate(() => document.title);
       data["contactEmail"] = await extractContactAddress(page);
@@ -147,6 +211,7 @@ async function scrapePublicPage(
       data["metadata"] = await extractMetadata(page);
       data["youtubeLinks"] = await extractYoutubeLinks(page);
       data["socialLinks"] = await extractSocialLinks(page);
+      data["rawLinks"] = await findLinksToVisit(page);
     }
 
     console.log(`// Data: ${JSON.stringify(data, null, 2)}`);
