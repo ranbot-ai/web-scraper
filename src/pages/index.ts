@@ -1,110 +1,104 @@
 import { IQueueItem } from "../../types";
 import { asyncForEach } from "../utils";
-import { config } from "./../environment/config";
+import { config } from "../environment/config";
 import { SOCIAL_LINKS, SOCIAL_LINKS_TO_EXCLUDE } from "./identifiers";
 
-async function extractMetadata(page: any): Promise<any> {
-  const metaData = await page.$$eval("meta", (metas: any) => {
-    return metas.reduce((acc: any, meta: any) => {
-      let key = meta.name || meta.property || meta["http-equiv"] || undefined;
+type MetaData = Record<string, string>;
+type ContactInfo = {
+  emails: string[];
+  phones: string[];
+};
+type LinkData = {
+  href: string;
+  text: string;
+};
+
+async function extractMetadata(page: any): Promise<MetaData> {
+  return page.$$eval("meta", (metas: HTMLMetaElement[]) => {
+    return metas.reduce((acc: MetaData, meta: HTMLMetaElement) => {
+      const key = meta.name || meta.getAttribute("property") || meta.httpEquiv;
       const value = meta.content;
 
-      // Utility function to convert kebab-case to camelCase
-      if (key)
-        key = key
+      if (key) {
+        const camelCaseKey = key
           .replace(/-([a-z])|_([a-z])|:([a-z])/g, (char: string) =>
             char.toUpperCase()
           )
-          .replace(/\-|\_|\:/g, "");
-
-      if (key && value) {
-        // Automatically convert kebab-case keys to camelCase
-        acc[key] = value; // Aggregate key-value pairs into a single object
+          .replace(/[-_:]/g, "");
+        if (value) acc[camelCaseKey] = value;
       }
 
       return acc;
-    }, {}); // Initialize as an empty object for aggregation
+    }, {});
   });
-
-  return metaData; // Return metadata in the desired format
 }
 
-async function extractContactAddress(page: any): Promise<any> {
-  const address = await page.$$eval(`a[href^='mailto:']`, (elements: any[]) =>
-    elements.map((el: { getAttribute: (arg0: string) => any }) =>
-      el.getAttribute("href").replace("mailto:", "")
-    )
+async function extractContactInfo(page: any): Promise<ContactInfo> {
+  const emails = await page.$$eval(
+    `a[href^='mailto:']`,
+    (elements: HTMLAnchorElement[]) =>
+      elements
+        .map((el) => el.getAttribute("href")?.replace("mailto:", ""))
+        .filter(Boolean) as string[]
   );
 
-  return [...new Set(address)];
-}
-
-async function extractContactPhone(page: any): Promise<any> {
-  const phoneNumber = await page.$$eval(`a[href^='tel:']`, (elements: any[]) =>
-    elements.map((el: { getAttribute: (arg0: string) => any }) =>
-      el.getAttribute("href").replace("tel:", "")
-    )
+  const phones = await page.$$eval(
+    `a[href^='tel:']`,
+    (elements: HTMLAnchorElement[]) =>
+      elements
+        .map((el) => el.getAttribute("href")?.replace("tel:", ""))
+        .filter(Boolean) as string[]
   );
 
-  return [...new Set(phoneNumber)];
+  return {
+    emails: [...new Set(emails)] as string[],
+    phones: [...new Set(phones)] as string[],
+  };
 }
 
-async function extractYoutubeLinks(page: any): Promise<any> {
-  const youtubeLinks = await page.$$eval(`iframe`, (elements: any[]) =>
+async function extractYoutubeLinks(page: any): Promise<string[]> {
+  return page.$$eval(`iframe`, (elements: HTMLIFrameElement[]) =>
     elements
-      .map((el: { getAttribute: (arg0: string) => any }) =>
-        el.getAttribute("src")
-      )
-      .filter((link: string) => {
-        return (
+      .map((el) => el.getAttribute("src"))
+      .filter(
+        (link) =>
           link &&
-          link.match(
-            /\s*(https?:\/\/www.youtube.com\/(?:v|embed)\/([a-zA-Z0-9-]+).*)/
+          /https?:\/\/www\.youtube\.com\/(?:v|embed)\/([a-zA-Z0-9-]+)/.test(
+            link
           )
-        );
-      })
+      )
   );
-
-  return [...new Set(youtubeLinks)];
 }
 
-async function extractSocialLinks(page: any): Promise<any> {
-  let links: string[] = [];
+async function extractSocialLinks(page: any): Promise<string[]> {
+  const links: string[] = [];
   await asyncForEach(SOCIAL_LINKS, async (prefix: string) => {
-    let linksForPrefix = await page.evaluate((prefix: string) => {
-      //returns array of all hrefs that fit social links
+    const linksForPrefix = await page.evaluate((prefix: string) => {
       const currentURL = document.location.href;
-
-      return Array.from(document.querySelectorAll("a[href^='" + prefix + "']"))
-        .map((a: any) => a.getAttribute("href"))
+      return Array.from(document.querySelectorAll(`a[href^='${prefix}']`))
+        .map((a) => a.getAttribute("href"))
         .filter(
           (link) =>
-            link.match(/^https\:\/\/github\.com/) === null ||
-            (currentURL.match(/^https\:\/\/github\.com/) &&
+            !link?.match(/^https:\/\/github\.com/) ||
+            (currentURL.match(/^https:\/\/github\.com/) &&
               link === "https://github.com/github")
         );
     }, prefix);
 
-    links.push(linksForPrefix);
+    links.push(...linksForPrefix);
   });
 
-  return Array.from(new Set(links.flat())).filter((link) => {
-    let matched = false;
-
-    SOCIAL_LINKS_TO_EXCLUDE.forEach((regexp: any) => {
-      if (link.match(regexp)) matched = true;
-    });
-    return !matched;
-  });
+  return Array.from(new Set(links)).filter(
+    (link) => !SOCIAL_LINKS_TO_EXCLUDE.some((regexp) => link.match(regexp))
+  );
 }
 
-export async function findLinksToVisit(page: any) {
+async function findLinksToVisit(page: any): Promise<LinkData[]> {
   const rawLinks = await page.evaluate(() => {
     const anchorTags = document.querySelectorAll("a");
-
-    let linkData = Array.from(anchorTags)
+    const linkData = Array.from(anchorTags)
       .filter((anchor) => {
-        let cleanedText = anchor.textContent?.trim();
+        const cleanedText = anchor.textContent?.trim();
         return (
           cleanedText &&
           /\S/.test(cleanedText) &&
@@ -115,23 +109,16 @@ export async function findLinksToVisit(page: any) {
         let cleanedText = anchor.textContent?.trim();
         const imgTags = anchor.querySelectorAll("img");
 
-        // Replace <img> tags with their alt text
-        if (imgTags.length > 0) {
-          imgTags.forEach((img) => {
-            const altText = img.alt.trim();
-            // Replace the <img> tag in the anchor's innerHTML with the alt text
-            if (altText) {
-              cleanedText = cleanedText?.replace(img.outerHTML, altText);
-            }
-          });
-        }
+        imgTags.forEach((img) => {
+          const altText = img.alt.trim();
+          if (altText) {
+            cleanedText = cleanedText?.replace(img.outerHTML, altText);
+          }
+        });
 
-        // Further clean the text by removing any residual HTML tags
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = cleanedText as string;
         cleanedText = tempDiv.textContent || tempDiv.innerText || "";
-
-        // Remove \n characters and duplicate spaces
         cleanedText = cleanedText.replace(/\s+/g, " ").trim();
 
         return {
@@ -140,7 +127,6 @@ export async function findLinksToVisit(page: any) {
         };
       });
 
-    // Filter out duplicates based on href only
     const uniqueLinkData = Array.from(
       new Set(linkData.map((link) => link.href))
     ).map((href) => linkData.find((link) => link.href === href));
@@ -150,43 +136,36 @@ export async function findLinksToVisit(page: any) {
   return rawLinks;
 }
 
-// scrape page metadata and social links
 async function scrapePublicPage(
   browser: any,
   queue: IQueueItem[]
 ): Promise<void> {
-  // Go through every item in the queue and open page in the browser
   while (queue.length > 0) {
-    let queueItem: IQueueItem = queue.shift() as IQueueItem;
+    const queueItem: IQueueItem = queue.shift() as IQueueItem;
     console.log(queueItem);
-    let identifier = queueItem.identifier;
+    const identifier = queueItem.identifier;
 
     const context = browser.defaultBrowserContext();
-    let page = await browser.newPage();
-
-    // Configure the navigation timeout
+    const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(config.timeout);
 
-    let domain = identifier.identifier;
+    const domain = identifier.identifier;
     let response: any = null;
     let error: any = null;
     let success = false;
-    let data: any = {};
+    const data: any = {};
 
     await asyncForEach(config.protocols, async (protocol: string) => {
-      if (success === false) {
-        let url = protocol + domain;
-
+      if (!success) {
+        const url = `${protocol}${domain}`;
         try {
           data["sourceUrl"] = url;
           console.log("// Visiting: " + url);
-
           await context.overridePermissions(url, [
             "geolocation",
             "notifications",
           ]);
           response = await page.goto(url, { waitUntil: "networkidle2" });
-
           console.log("// -> Page Loaded");
           success = true;
         } catch (err: any) {
@@ -197,17 +176,17 @@ async function scrapePublicPage(
       }
     });
 
-    if (success === false) {
-      if (error !== null) data["error"] = error.message;
+    if (!success) {
+      if (error) data["error"] = error.message;
     } else {
-      if (response !== null) data["responseCode"] = response.status();
-
+      if (response) data["responseCode"] = response.status();
       await page.bringToFront();
 
       data["finalUrl"] = await page.evaluate(() => document.location.href);
       data["title"] = await page.evaluate(() => document.title);
-      data["contactEmail"] = await extractContactAddress(page);
-      data["contactPhone"] = await extractContactPhone(page);
+      const contactInfo = await extractContactInfo(page);
+      data["contactEmail"] = contactInfo.emails;
+      data["contactPhone"] = contactInfo.phones;
       data["metadata"] = await extractMetadata(page);
       data["youtubeLinks"] = await extractYoutubeLinks(page);
       data["socialLinks"] = await extractSocialLinks(page);
@@ -215,7 +194,6 @@ async function scrapePublicPage(
     }
 
     console.log(`// Data: ${JSON.stringify(data, null, 2)}`);
-
     await page.close();
   }
 

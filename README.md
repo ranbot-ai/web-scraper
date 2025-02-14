@@ -1,4 +1,4 @@
-# Web Scraper | 2024
+# Web Scraper | 2025 Activity
 
 - A Nodejs script that scrapes metadata & social links from public webpages.
 
@@ -130,4 +130,4 @@ env DOMAINS=github.com node build/index.js
 
 ## Contributors
 
-- Encore
+- [Encore](https://github.com/encoreshao)

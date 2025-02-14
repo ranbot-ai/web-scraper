@@ -36,9 +36,12 @@ import { scrapeIdentifier } from "./pages/identifiers";
     "--disable-notifications",
   ];
 
+  const HEADLESS =
+    (process.env.HEADLESS && process.env.HEADLESS == "true") || config.headless;
+
   // Start browser
   const browser = await puppeteer.launch({
-    headless: config.headless,
+    headless: HEADLESS,
     devtools: config.devtools,
     args: args,
   });
