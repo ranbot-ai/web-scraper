@@ -29,6 +29,7 @@ const SOCIAL_LINKS = [
   "https://www.pinterest.com/",
   "https://github.com/",
   "https://www.youtube.com/user/",
+  "https://medium.com/",
 ];
 
 const SOCIAL_LINKS_TO_EXCLUDE = [
